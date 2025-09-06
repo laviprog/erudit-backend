@@ -1,0 +1,17 @@
+services:
+  erudit-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: erudit-backend
+    image: erudit-backend
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file:
+      - .env
+    networks:
+      - erudit-network
+
+networks:
+  erudit-network:
+    external: true
