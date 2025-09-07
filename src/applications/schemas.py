@@ -9,8 +9,8 @@ class Application(BaseSchema):
     captain_name: str
     captain_email: str
     captain_phone: str
-    teamName: str
-    teamParticipantsNumber: int
+    team_name: str
+    team_participants_number: int
     created_at: datetime
     updated_at: datetime
     event_id: int
@@ -20,8 +20,8 @@ class ApplicationCreate(BaseSchema):
     captain_name: str
     captain_email: str
     captain_phone: str
-    teamName: str
-    teamParticipantsNumber: int
+    team_name: str
+    team_participants_number: int
     event_id: int
 
 

@@ -16,8 +16,8 @@ class ApplicationModel(BigIntAuditBase):
     captain_name: Mapped[str] = mapped_column(String(255))
     captain_email: Mapped[str] = mapped_column(String(255))
     captain_phone: Mapped[str] = mapped_column(String(31))
-    teamName: Mapped[str] = mapped_column(String(255))
-    teamParticipantsNumber: Mapped[int]
+    team_name: Mapped[str] = mapped_column(String(255))
+    team_participants_number: Mapped[int]
 
     event_id: Mapped[int] = mapped_column(ForeignKey("events.id", ondelete="CASCADE"))
     event: Mapped["EventModel"] = relationship(back_populates="applications")
