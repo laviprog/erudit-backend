@@ -18,4 +18,4 @@ class EventService(service.SQLAlchemyAsyncRepositoryService[EventModel, EventRep
 
     async def get_events(self, actual: bool = False) -> Sequence[EventModel]:
         filters = [EventModel.datetime_event >= datetime.now(tz=timezone.utc)] if actual else []
-        return await self.list(*filters, order_by=(EventModel.datetime_event, True))
+        return await self.list(*filters, order_by=(EventModel.datetime_event, False))
