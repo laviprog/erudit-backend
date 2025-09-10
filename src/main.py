@@ -7,6 +7,7 @@ from src.middlewares import LogMiddleware
 
 from .applications.routes import router as applications_router
 from .events.routes import router as events_router
+from .requests.routes import router as requests_router
 from .logging import configure as configure_logging
 from .routes import router
 
@@ -33,6 +34,7 @@ app.add_middleware(LogMiddleware)
 app.include_router(router=router)
 app.include_router(router=events_router)
 app.include_router(router=applications_router)
+app.include_router(router=requests_router)
 
 
 @app.exception_handler(NotFoundError)
