@@ -5,8 +5,9 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from src.applications.models import ApplicationModel  # noqa
-from src.config import settings
 from src.events.models import EventModel  # noqa
+from src.requests.models import RequestModel  # noqa
+from src.config import settings
 
 config = context.config
 

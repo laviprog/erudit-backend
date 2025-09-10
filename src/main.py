@@ -34,6 +34,7 @@ app.include_router(router=router)
 app.include_router(router=events_router)
 app.include_router(router=applications_router)
 
+
 @app.exception_handler(NotFoundError)
 async def not_found_handler(request: Request, exc: NotFoundError):
     return JSONResponse(
