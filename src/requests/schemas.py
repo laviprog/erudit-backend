@@ -25,8 +25,8 @@ class RequestCreate(BaseSchema):
 
 
 class RequestList(BaseSchema):
-    applications: list[Request]
+    requests: list[Request]
 
     @classmethod
     def from_orm_list(cls, objs: list[RequestModel]):
-        return cls(applications=[Request.model_validate(obj) for obj in objs])
+        return cls(requests=[Request.model_validate(obj) for obj in objs])
