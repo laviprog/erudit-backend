@@ -1,5 +1,6 @@
 from fastapi import APIRouter, status
 
+from ..auth.security.dependencies import CurrentAdminDep
 from .dependencies import RequestServiceDep
 from .models import RequestModel
 from .schemas import Request, RequestCreate, RequestList
@@ -15,7 +16,10 @@ router = APIRouter(prefix="/requests", tags=["Requests"])
         status.HTTP_200_OK: {"description": "List of all requests returned successfully"},
     },
 )
-async def get_all_requests(service: RequestServiceDep) -> RequestList:
+async def get_all_requests(
+    service: RequestServiceDep,
+    cur_admin: CurrentAdminDep,
+) -> RequestList:
     requests = await service.list()
     return RequestList.from_orm_list(requests)
 
@@ -29,7 +33,11 @@ async def get_all_requests(service: RequestServiceDep) -> RequestList:
         status.HTTP_404_NOT_FOUND: {"description": "Request not found"},
     },
 )
-async def get_request_by_id(request_id: int, service: RequestServiceDep) -> Request:
+async def get_request_by_id(
+    request_id: int,
+    service: RequestServiceDep,
+    cur_admin: CurrentAdminDep,
+) -> Request:
     request = await service.get(request_id)
     return Request.model_validate(request)
 

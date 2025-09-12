@@ -10,4 +10,8 @@ RUN uv sync
 
 COPY . .
 
+RUN chmod +x ./scripts/entrypoint.sh ./scripts/wait-for-it.sh
+
+ENTRYPOINT ["./scripts/entrypoint.sh"]
+
 CMD ["uv", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

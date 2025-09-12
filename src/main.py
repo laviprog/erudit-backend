@@ -1,14 +1,17 @@
-from advanced_alchemy.exceptions import NotFoundError
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import JSONResponse
 
 from src.middlewares import LogMiddleware
 
+from .admins.routes import router as admins_router
 from .applications.routes import router as applications_router
+from .auth.routes import router as auth_router
 from .events.routes import router as events_router
-from .requests.routes import router as requests_router
+from .exceptions.handlers import setup_exception_handlers
+from .exceptions.responses import error_responses
+from .lifecycle import lifespan
 from .logging import configure as configure_logging
+from .requests.routes import router as requests_router
 from .routes import router
 
 configure_logging()
@@ -19,7 +22,11 @@ app = FastAPI(
     docs_url="/docs",
     openapi_url="/openapi.json",
     root_path="/api/v1",
+    responses=error_responses,
+    lifespan=lifespan,
 )
+
+setup_exception_handlers(app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -35,13 +42,5 @@ app.include_router(router=router)
 app.include_router(router=events_router)
 app.include_router(router=applications_router)
 app.include_router(router=requests_router)
-
-
-@app.exception_handler(NotFoundError)
-async def not_found_handler(request: Request, exc: NotFoundError):
-    return JSONResponse(
-        status_code=404,
-        content={
-            "detail": "Resource not found",
-        },
-    )
+app.include_router(router=admins_router)
+app.include_router(router=auth_router)

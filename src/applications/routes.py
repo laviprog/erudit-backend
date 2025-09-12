@@ -3,6 +3,7 @@ from fastapi import APIRouter, status
 from src.applications.dependencies import ApplicationServiceDep
 from src.applications.models import ApplicationModel
 from src.applications.schemas import Application, ApplicationCreate, ApplicationList
+from src.auth.security.dependencies import CurrentAdminDep
 
 router = APIRouter(prefix="/applications", tags=["Applications"])
 
@@ -15,7 +16,10 @@ router = APIRouter(prefix="/applications", tags=["Applications"])
         status.HTTP_200_OK: {"description": "List of all applications returned successfully"},
     },
 )
-async def get_all_applications(service: ApplicationServiceDep) -> ApplicationList:
+async def get_all_applications(
+    service: ApplicationServiceDep,
+    cur_admin: CurrentAdminDep,
+) -> ApplicationList:
     applications = await service.list()
     return ApplicationList.from_orm_list(applications)
 
@@ -29,7 +33,11 @@ async def get_all_applications(service: ApplicationServiceDep) -> ApplicationLis
         status.HTTP_404_NOT_FOUND: {"description": "Application not found"},
     },
 )
-async def get_application_by_id(application_id: int, service: ApplicationServiceDep) -> Application:
+async def get_application_by_id(
+    application_id: int,
+    service: ApplicationServiceDep,
+    cur_admin: CurrentAdminDep,
+) -> Application:
     application = await service.get(application_id)
     return Application.model_validate(application)
 

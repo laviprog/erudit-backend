@@ -6,6 +6,13 @@ class Settings(BaseSettings):
 
     LOG_LEVEL: str = "DEBUG"
 
+    SECRET_KEY: str
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440  # 1 day
+
+    ADMIN_USERNAME_DEFAULT: str | None = None
+    ADMIN_PASSWORD_DEFAULT: str | None = None
+
     DB_HOST: str
     DB_PORT: int
     DB_NAME: str

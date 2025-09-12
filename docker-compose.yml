@@ -12,6 +12,18 @@ services:
     networks:
       - erudit-network
 
+  postgres-erudit:
+    image: postgres:15
+    container_name: postgres-erudit
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "127.0.0.1:5432:5432"
+    networks:
+      - erudit-network
+
 networks:
   erudit-network:
     external: true

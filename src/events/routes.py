@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Query, status
 
+from src.auth.security.dependencies import CurrentAdminDep
 from src.events.dependencies import EventServiceDep
 from src.events.models import EventModel
 from src.events.schemas import Event, EventCreate, EventList
@@ -46,7 +47,11 @@ async def get_event_by_id(event_id: int, service: EventServiceDep) -> Event:
         status.HTTP_201_CREATED: {"description": "Event created successfully"},
     },
 )
-async def create_new_event(event: EventCreate, service: EventServiceDep) -> Event:
+async def create_new_event(
+    event: EventCreate,
+    service: EventServiceDep,
+    cur_admin: CurrentAdminDep,
+) -> Event:
     event_model = EventModel(**event.to_dict())
     event_created = await service.create(event_model)
     return Event.model_validate(event_created)
