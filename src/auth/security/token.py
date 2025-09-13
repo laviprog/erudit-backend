@@ -22,9 +22,10 @@ def create_access_token(token_payload: TokenPayload) -> str:
 
 def _parse_token_payload(payload: dict[str, Any]) -> TokenPayload:
     admin_id = int(payload.get("id"))
+    username = payload.get("username")
     if not admin_id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-    return TokenPayload(id=admin_id)
+    return TokenPayload(id=admin_id, username=username)
 
 
 def _verify_jwt_token(

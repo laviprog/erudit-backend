@@ -32,7 +32,7 @@ class AdminService(service.SQLAlchemyAsyncRepositoryService[AdminModel, AdminRep
                 detail="Invalid credentials",
             )
 
-        payload = TokenPayload(id=admin.id)
+        payload = TokenPayload(id=admin.id, username=admin.username)
         access_token = create_access_token(payload)
         return Token(
             access_token=access_token,
