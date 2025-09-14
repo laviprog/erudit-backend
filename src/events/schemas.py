@@ -39,6 +39,25 @@ class EventCreate(BaseSchema):
     image_url: str | None
 
 
+class EventUpdate(EventCreate): ...
+
+
+class EventPartialUpdate(BaseSchema):
+    number: int | None = None
+    title: str | None = None
+    description: str | None = None
+    datetime_event: datetime | None = None
+    registration_start: datetime | None = None
+    registration_end: datetime | None = None
+    duration: int | None = None
+    location: str | None = None
+    format: EventFormat | None = None
+    price: int | None = None
+    theme: str | None = None
+    max_teams: int | None = None
+    image_url: str | None = None
+
+
 class EventList(BaseSchema):
     events: list[Event]
 

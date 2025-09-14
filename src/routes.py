@@ -1,4 +1,6 @@
 from fastapi import APIRouter
+from fastapi.responses import RedirectResponse
+from scalar_fastapi import get_scalar_api_reference
 
 from src.schemas import HealthCheck
 
@@ -19,3 +21,16 @@ router = APIRouter(tags=["Monitoring"])
 )
 async def healthcheck() -> HealthCheck:
     return HealthCheck()
+
+
+@router.get("/docs/scalar", include_in_schema=False)
+async def scalar_html():
+    return get_scalar_api_reference(
+        openapi_url="/api/v1/openapi.json",
+        title="Erudit API",
+    )
+
+
+@router.get("/docs", include_in_schema=False)
+async def redirect_to_docs():
+    return RedirectResponse(url="/docs/scalar")

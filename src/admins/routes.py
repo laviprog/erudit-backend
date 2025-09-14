@@ -1,61 +1,1 @@
-from fastapi import APIRouter, status
-
-from ..auth.security.dependencies import CurrentAdminDep
-from .dependencies import AdminServiceDep
-from .models import AdminModel
-from .schemas import Admin, AdminCreate, AdminList
-
-router = APIRouter(prefix="/admins", tags=["Admins"])
-
-
-@router.get(
-    "",
-    summary="List all admins",
-    description="Retrieve a list of all requests",
-    responses={
-        status.HTTP_200_OK: {"description": "List of all requests returned successfully"},
-    },
-)
-async def get_all_admins(
-    service: AdminServiceDep,
-    cur_admin: CurrentAdminDep,
-) -> AdminList:
-    admins = await service.list()
-    return AdminList.from_orm_list(admins)
-
-
-@router.get(
-    "/{admin_id}",
-    summary="Get admin by ID",
-    description="Retrieve a specific admin by its ID",
-    responses={
-        status.HTTP_200_OK: {"description": "Admin returned successfully"},
-        status.HTTP_404_NOT_FOUND: {"description": "Admin not found"},
-    },
-)
-async def get_admin_by_id(
-    admin_id: int,
-    service: AdminServiceDep,
-    cur_admin: CurrentAdminDep,
-) -> Admin:
-    admin = await service.get(admin_id)
-    return Admin.model_validate(admin)
-
-
-@router.post(
-    "",
-    summary="Create a new admin",
-    description="Create a new admin",
-    status_code=status.HTTP_201_CREATED,
-    responses={
-        status.HTTP_201_CREATED: {"description": "Admin created successfully"},
-    },
-)
-async def create_new_admin(
-    admin: AdminCreate,
-    service: AdminServiceDep,
-    cur_admin: CurrentAdminDep,
-) -> Admin:
-    admin_model = AdminModel(**admin.to_dict())
-    admin_created = await service.create_admin(admin_model)
-    return Admin.model_validate(admin_created)
+from fastapi import APIRouter, statusfrom ..auth.security.dependencies import CurrentAdminDepfrom .dependencies import AdminServiceDepfrom .models import AdminModelfrom .schemas import Admin, AdminCreate, AdminListrouter = APIRouter(prefix="/admins", tags=["Admins"])@router.get(    "",    summary="List all admins",    description="Retrieve a list of all requests",    responses={        status.HTTP_200_OK: {"description": "List of all requests returned successfully"},    },)async def get_all_admins(    service: AdminServiceDep,    cur_admin: CurrentAdminDep,) -> AdminList:    admins = await service.list()    return AdminList.from_orm_list(admins)@router.get(    "/{admin_id}",    summary="Get admin by ID",    description="Retrieve a specific admin by its ID",    responses={        status.HTTP_200_OK: {"description": "Admin returned successfully"},        status.HTTP_404_NOT_FOUND: {"description": "Admin not found"},    },)async def get_admin_by_id(    admin_id: int,    service: AdminServiceDep,    cur_admin: CurrentAdminDep,) -> Admin:    admin = await service.get(admin_id)    return Admin.model_validate(admin)@router.post(    "",    summary="Create a new admin",    description="Create a new admin",    status_code=status.HTTP_201_CREATED,    responses={        status.HTTP_201_CREATED: {"description": "Admin created successfully"},    },)async def create_new_admin(    admin: AdminCreate,    service: AdminServiceDep,    cur_admin: CurrentAdminDep,) -> Admin:    admin_model = AdminModel(**admin.to_dict())    admin_created = await service.create_admin(admin_model)    return Admin.model_validate(admin_created)@router.delete(    "/{admin_id}",    summary="Delete a admin",    description="Delete a admin",    status_code=status.HTTP_204_NO_CONTENT,    responses={        status.HTTP_204_NO_CONTENT: {"description": "Admin deleted successfully"},    },)async def delete_admin_by_id(    admin_id: int,    service: AdminServiceDep,    cur_admin: CurrentAdminDep,) -> None:    await service.delete(admin_id)

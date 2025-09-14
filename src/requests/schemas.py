@@ -24,6 +24,15 @@ class RequestCreate(BaseSchema):
     type: TypeRequest | None
 
 
+class RequestPartialUpdate(BaseSchema):
+    name: str | None = None
+    email: str | None = None
+    phone: str | None = None
+    message: str | None = None
+    type: TypeRequest | None = None
+    status: StatusRequest | None = None
+
+
 class RequestList(BaseSchema):
     requests: list[Request]
 

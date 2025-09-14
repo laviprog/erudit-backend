@@ -3,7 +3,7 @@ from fastapi import APIRouter, Query, status
 from src.auth.security.dependencies import CurrentAdminDep
 from src.events.dependencies import EventServiceDep
 from src.events.models import EventModel
-from src.events.schemas import Event, EventCreate, EventList
+from src.events.schemas import Event, EventCreate, EventList, EventPartialUpdate, EventUpdate
 
 router = APIRouter(prefix="/events", tags=["Events"])
 
@@ -55,3 +55,59 @@ async def create_new_event(
     event_model = EventModel(**event.to_dict())
     event_created = await service.create(event_model)
     return Event.model_validate(event_created)
+
+
+@router.delete(
+    "/{event_id}",
+    summary="Delete an event",
+    description="Delete an event by its ID",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_204_NO_CONTENT: {"description": "Event deleted successfully"},
+        status.HTTP_404_NOT_FOUND: {"description": "Event not found"},
+    },
+)
+async def delete_event_by_id(
+    event_id: int,
+    service: EventServiceDep,
+    cur_admin: CurrentAdminDep,
+) -> None:
+    await service.delete(event_id)
+
+
+@router.put(
+    "/{event_id}",
+    summary="Update an event",
+    description="Update an event by its ID",
+    responses={
+        status.HTTP_200_OK: {"description": "Event updated successfully"},
+        status.HTTP_404_NOT_FOUND: {"description": "Event not found"},
+    },
+)
+async def update_event_by_id(
+    event_id: int,
+    event: EventUpdate,
+    service: EventServiceDep,
+    cur_admin: CurrentAdminDep,
+) -> Event:
+    event_updated = await service.update(event_id, event.to_dict())
+    return Event.model_validate(event_updated)
+
+
+@router.patch(
+    "/{event_id}",
+    summary="Partially update an event",
+    description="Partially update an event by its ID",
+    responses={
+        status.HTTP_200_OK: {"description": "Event partially updated successfully"},
+        status.HTTP_404_NOT_FOUND: {"description": "Event not found"},
+    },
+)
+async def partial_update_event_by_id(
+    event_id: int,
+    event: EventPartialUpdate,
+    service: EventServiceDep,
+    cur_admin: CurrentAdminDep,
+) -> Event:
+    event_updated = await service.update(event_id, event.to_dict())
+    return Event.model_validate(event_updated)

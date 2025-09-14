@@ -57,3 +57,21 @@ async def create_new_application(
     application_model = ApplicationModel(**application.to_dict())
     application_created = await service.create(application_model)
     return Application.model_validate(application_created)
+
+
+@router.delete(
+    "/{application_id}",
+    summary="Delete an application",
+    description="Delete an application by its ID",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_204_NO_CONTENT: {"description": "Application deleted successfully"},
+        status.HTTP_404_NOT_FOUND: {"description": "Application not found"},
+    },
+)
+async def delete_application_by_id(
+    application_id: int,
+    service: ApplicationServiceDep,
+    cur_admin: CurrentAdminDep,
+) -> None:
+    await service.delete(application_id)

@@ -19,7 +19,7 @@ configure_logging()
 app = FastAPI(
     title="Erudit API",
     version="0.0.1",
-    docs_url="/docs",
+    docs_url="/api/v1/docs/swagger",
     openapi_url="/openapi.json",
     root_path="/api/v1",
     responses=error_responses,

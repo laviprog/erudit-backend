@@ -3,7 +3,7 @@ from fastapi import APIRouter, status
 from ..auth.security.dependencies import CurrentAdminDep
 from .dependencies import RequestServiceDep
 from .models import RequestModel
-from .schemas import Request, RequestCreate, RequestList
+from .schemas import Request, RequestCreate, RequestList, RequestPartialUpdate
 
 router = APIRouter(prefix="/requests", tags=["Requests"])
 
@@ -55,3 +55,40 @@ async def create_new_request(application: RequestCreate, service: RequestService
     request_model = RequestModel(**application.to_dict())
     request_created = await service.create(request_model)
     return Request.model_validate(request_created)
+
+
+@router.delete(
+    "/{request_id}",
+    summary="Delete a request",
+    description="Delete a request by its ID",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_204_NO_CONTENT: {"description": "Request deleted successfully"},
+        status.HTTP_404_NOT_FOUND: {"description": "Request not found"},
+    },
+)
+async def delete_request_by_id(
+    request_id: int,
+    service: RequestServiceDep,
+    cur_admin: CurrentAdminDep,
+) -> None:
+    await service.delete(request_id)
+
+
+@router.patch(
+    "/{request_id}",
+    summary="Partially update a request",
+    description="Partially update a request by its ID",
+    responses={
+        status.HTTP_200_OK: {"description": "Request updated successfully"},
+        status.HTTP_404_NOT_FOUND: {"description": "Request not found"},
+    },
+)
+async def update_request_by_id(
+    request_id: int,
+    request: RequestPartialUpdate,
+    service: RequestServiceDep,
+    cur_admin: CurrentAdminDep,
+) -> Request:
+    request_updated = await service.update(request_id, request.to_dict())
+    return Request.model_validate(request_updated)
