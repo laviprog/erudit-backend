@@ -23,7 +23,7 @@ async def healthcheck() -> HealthCheck:
     return HealthCheck()
 
 
-@router.get("/docs/scalar", include_in_schema=False)
+@router.get("/docs", include_in_schema=False)
 async def scalar_html():
     return get_scalar_api_reference(
         openapi_url="/api/v1/openapi.json",
@@ -31,6 +31,6 @@ async def scalar_html():
     )
 
 
-@router.get("/docs", include_in_schema=False)
+@router.get("/docs/scalar", include_in_schema=False)
 async def redirect_to_docs():
-    return RedirectResponse(url="/docs/scalar")
+    return RedirectResponse(url="/docs")
